@@ -28,6 +28,18 @@ module WebHDFS
       @httpfs_mode = false
     end
 
+    # curl -i -X PUT "http://<HOST>:<PORT>/webhdfs/v1/<PATH>?op=CREATESYMLINK&destination=<PATH>
+    #                 [&createParent=<true|false>]"
+    def create_symlink(path, dest, options={})
+      check_options(options, OPT_TABLE['CREATESYMLINK'])
+      unless dest.start_with?('/')
+        dest = '/' + dest
+      end
+      res = operate_requests(:put, path, 'CREATESYMLINK', options.merge({'destination' => dest}))
+      check_success_json(res, 'boolean')
+    end
+    OPT_TABLE['CREATESYMLINK'] = ['createParent']
+
     # curl -i -X PUT "http://<HOST>:<PORT>/webhdfs/v1/<PATH>?op=CREATE
     #                 [&overwrite=<true|false>][&blocksize=<LONG>][&replication=<SHORT>]
     #                 [&permission=<OCTAL>][&buffersize=<INT>]"
@@ -84,7 +96,7 @@ module WebHDFS
     # curl -i -X DELETE "http://<host>:<port>/webhdfs/v1/<path>?op=DELETE
     #                          [&recursive=<true|false>]"
     def delete(path, options={})
-      check_options(options, OPT_TABLE[:delete])
+      check_options(options, OPT_TABLE['DELETE'])
       res = operate_requests(:delete, path, 'DELETE', options)
       check_success_json(res, 'boolean')
     end

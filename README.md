@@ -4,7 +4,9 @@ The webhdfs-client gem is to access Hadoop WebHDFS (EXPERIMENTAL: and HttpFs). W
 
 ## Installation
 
-    gem install webhdfs
+    rake install
+or 
+    gem install webhdfs-client <Coming...>
 
 ## Usage
 
